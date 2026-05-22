@@ -13,7 +13,7 @@ export async function register(
     name: string
 ) {
     return signUp({
-        username: email,
+        username: name,
         password,
         options: {
             userAttributes: { email, name },
@@ -23,10 +23,10 @@ export async function register(
 }
 
 export async function confirmEmail(
-    email: string,
+    username: string,
     code: string
 ) {
-    return confirmSignUp({ username: email, confirmationCode: code });
+    return confirmSignUp({ username, confirmationCode: code });
 }
 
 export async function getAccessToken(): Promise<string> {

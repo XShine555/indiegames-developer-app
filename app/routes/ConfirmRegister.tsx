@@ -24,14 +24,15 @@ export default function ConfirmRegister() {
     const navigate = useNavigate();
     const { state } = useLocation();
     const email: string | null = state?.email;
+    const username: string | null = state?.username;
 
     useEffect(() => {
-        if (!email) {
+        if (!email || !username) {
             navigate("/register", { replace: true });
         }
-    }, [email, navigate]);
+    }, [email, username, navigate]);
 
-    if (!email) return null;
+    if (!email || !username) return null;
 
     const [code, setCode] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function ConfirmRegister() {
 
         setIsPending(true);
         try {
-            await confirmEmail(email, code);
+            await confirmEmail(username, code);
             navigate("/login", { replace: true });
         } catch (err) {
             setError(parseAuthError(err));

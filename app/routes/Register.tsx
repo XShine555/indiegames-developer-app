@@ -41,6 +41,10 @@ export default function Register() {
             setError("El usuario es obligatorio");
             return;
         }
+        if (/\s/.test(user)) {
+            setError("El usuario no puede contener espacios");
+            return;
+        }
         if (!password.trim()) {
             setError("La contraseña es obligatoria");
             return;
@@ -53,7 +57,7 @@ export default function Register() {
         setIsPending(true);
         try {
             await register(email, password, user);
-            navigate("/confirm-register", { state: { email }, replace: true });
+            navigate("/confirm-register", { state: { email, username: user }, replace: true });
         } catch (err) {
             setError(parseAuthError(err));
         } finally {
