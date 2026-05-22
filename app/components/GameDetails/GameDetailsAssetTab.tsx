@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Trash2, Upload, Loader, Plus } from "lucide-react";
 import Divider from "@components/Divider";
 import StatusBadge from "@components/StatusBadge";
@@ -237,19 +237,28 @@ type ArtworksTabProps = {
 };
 
 export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
-    const [artworks, setArtworks] = useState<Record<ArtworkKey, DeveloperArtwork | null>>({
+    const artworksByKey: Record<ArtworkKey, DeveloperArtwork | null> = {
         capsule: game.artworks[0] ?? null,
-        header:  game.artworks[1] ?? null,
-        main:    game.artworks[2] ?? null,
-    });
+        header: game.artworks[1] ?? null,
+        main: game.artworks[2] ?? null,
+    };
 
     const [storePictures, setStorePictures] = useState(game.storePictures);
 
+    useEffect(() => {
+        setStorePictures(game.storePictures);
+    }, [game.storePictures]);
+
     const handleUploadArtwork = (key: ArtworkKey) => async (file: File) => {
+        const artworkId = artworksByKey[key]?.id;
+        if (!artworkId) {
+            throw new Error("No se encontró el artworkId para este slot.");
+        }
+
         const formData = new FormData();
         formData.append("Artwork", file);
 
-        const response = await apiClient.post(`/games/${game.id}/artworks/${key}`, formData);
+        const response = await apiClient.patch(`/games/${game.id}/artwork/${artworkId}`, formData);
         if (!response.ok) {
             throw new Error(getApiErrorMessage(response.status, {}, "No se pudo subir el artwork."));
         }
@@ -282,7 +291,7 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
                         <ArtworkSlot
                             key={key}
                             label={label}
-                            item={artworks[key]}
+                            item={artworksByKey[key]}
                             onUpload={handleUploadArtwork(key)}
                         />
                     ))}
