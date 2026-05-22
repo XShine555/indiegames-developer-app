@@ -87,7 +87,7 @@ export default function GameBuild() {
             {/* Back link */}
             <Link
                 to={backGameId ? `/game-details/${backGameId}?tab=builds` : -1 as unknown as string}
-                className="group inline-flex items-center w-fit text-slate-600 dark:text-white/60 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors duration-300"
+                className="group inline-flex items-center w-fit text-slate-600 dark:text-white/60 hover:text-primary-text transition-colors duration-300"
             >
                 <div className="flex items-center w-0 overflow-hidden opacity-0 -translate-x-4 transition-all duration-300 ease-out group-hover:w-6 group-hover:opacity-100 group-hover:translate-x-0">
                     <ArrowLeft size={16} />
